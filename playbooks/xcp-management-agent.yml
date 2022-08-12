@@ -1,0 +1,16 @@
+---
+- hosts: ubuntu
+  tasks:
+  - name: Install XCP-NG agent
+    apt:
+      name: 'xe-guest-utilities'
+      state: latest
+      update_cache: yes
+      only_upgrade: yes
+    register: apt_update_status
+
+  - name: Reboot when packages were updated
+    reboot:
+      post_reboot_delay: 60
+    throttle: 1
+    when: apt_update_status.changed
