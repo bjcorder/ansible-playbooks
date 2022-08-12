@@ -7,12 +7,16 @@
       state: latest
       update_cache: yes
       only_upgrade: yes
+    ignore_errors: true
+    ignore_unreachable: true
     register: apt_update_status
 
   - name: Reboot when packages were updated
     reboot:
       post_reboot_delay: 60
     throttle: 1
+    ignore_errors: true
+    ignore_unreachable: true
     when: apt_update_status.changed
 
 - hosts: rhel
@@ -22,6 +26,8 @@
       name: epel
       description: EPEL YUM repo
       baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+    ignore_errors: true
+    ignore_unreachable: true
   
   - name: Update all installed packages using YUM module
     yum:
@@ -29,6 +35,8 @@
       state: latest
       update_cache: yes
       update_only: yes
+    ignore_errors: true
+    ignore_unreachable: true
     register: yum_update_status
   
   - name: Update all installed packages using YUM module
@@ -37,6 +45,8 @@
       state: latest
       update_cache: yes
       update_only: yes
+    ignore_errors: true
+    ignore_unreachable: true
     register: yum_update_status
   
   - name: Enable service xe-linux-distribution and start it
@@ -44,9 +54,13 @@
       name: xe-linux-distribution
       enabled: yes
       state: started
+    ignore_errors: true
+    ignore_unreachable: true
 
   - name: Reboot when packages were updated
     reboot:
       post_reboot_delay: 60
     throttle: 1
+    ignore_errors: true
+    ignore_unreachable: true
     when: yum_update_status.changed
