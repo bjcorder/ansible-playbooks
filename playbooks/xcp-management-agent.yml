@@ -14,3 +14,39 @@
       post_reboot_delay: 60
     throttle: 1
     when: apt_update_status.changed
+
+- hosts: rhel
+  tasks:
+  - name: Add EPEL repository
+    ansible.builtin.yum_repository:
+      name: epel
+      description: EPEL YUM repo
+      baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+  
+  - name: Update all installed packages using YUM module
+    yum:
+      name: '*'
+      state: latest
+      update_cache: yes
+      update_only: yes
+    register: yum_update_status
+  
+  - name: Update all installed packages using YUM module
+    yum:
+      name: 'xe-guest-utilities-latest'
+      state: latest
+      update_cache: yes
+      update_only: yes
+    register: yum_update_status
+  
+  - name: Enable service xe-linux-distribution and start it
+    ansible.builtin.systemd:
+      name: xe-linux-distribution
+      enabled: yes
+      state: started
+
+  - name: Reboot when packages were updated
+    reboot:
+      post_reboot_delay: 60
+    throttle: 1
+    when: yum_update_status.changed
