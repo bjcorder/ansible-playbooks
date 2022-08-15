@@ -25,7 +25,7 @@
     ansible.builtin.yum_repository:
       name: epel
       description: EPEL YUM repo
-      baseurl: https://dl.fedoraproject.org/pub/epel/$releasever/$basearch/
+      baseurl: https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
     ignore_errors: true
     ignore_unreachable: true
   
